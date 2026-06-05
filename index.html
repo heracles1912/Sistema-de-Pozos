@@ -14,6 +14,75 @@
 
 
 <style>
+.tabla{
+  overflow-x:auto;
+}
+
+.tabsResultados{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.tabsResultados button{
+
+  background:#d9d9d9;
+  color:#333;
+
+  border:none;
+
+  padding:10px 18px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+  transition:0.2s;
+}
+
+.tabsResultados button:hover{
+
+  transform:translateY(-1px);
+
+}
+
+.tabsResultados button.activo{
+
+  background:#2e7d32;
+
+  color:white;
+
+  font-weight:bold;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+
+}
+
+.resultado-fila{
+
+  display:grid;
+
+  grid-template-columns: 250px 1fr;
+
+  align-items:start;
+
+  margin-bottom:0px;
+}
+
+.labelRes{
+
+  color:#222;
+}
+
+.valorRes{
+
+  font-weight:bold;
+
+  text-align:left;
+}
+
+
+
 .botonesDescarga{
   display:flex;
   justify-content:center;
@@ -29,7 +98,7 @@
 
   width:100%;
 
-  height:100vh; /* 🔥 no más grande que pantalla */
+  height:100vh; /*  no más grande que pantalla */
 
   overflow:hidden;
 
@@ -39,7 +108,7 @@
 .admin-carde{
   width:550px;
 
-  max-height:90vh; /* 🔥 evita crecer */
+  max-height:90vh; /*  evita crecer */
 
   overflow-y:auto;
 
@@ -78,7 +147,7 @@
 }
 .layout{
   display:flex;
-  align-items:center; /* 🔥 centra vertical */
+  align-items:center; /*  centra vertical */
   justify-content:center;
   gap:60px;
   flex-wrap:wrap;
@@ -94,6 +163,9 @@
   min-height:100vh;
 }
 
+td{
+  white-space: nowrap;
+}
 .slider{
   flex:1;
 
@@ -103,7 +175,7 @@
 
   min-width:350px;
 
-  height:650px; /* 🔥 altura fija */
+  height:650px; /*  altura fija */
 }
 
 .slider img{
@@ -415,7 +487,7 @@ button:hover{
 
 .modal-conteni{
   background:white;
-  width:300px; /* 👈 más ancho */
+  width:320px; /* 👈 más ancho */
   max-height:90vh; /* 👈 límite de pantalla */
   overflow-y:auto; /* 👈 scroll vertical */
   margin:40px auto;
@@ -429,7 +501,7 @@ button:hover{
 
 .modal-content{
   background:#e8f5e9;
-  width:800px; /* 👈 más ancho */
+  width:970px; /* 👈 más ancho */
   max-height:90vh; /* 👈 límite de pantalla */
   overflow-y:auto; /* 👈 scroll vertical */
   margin:40px auto;
@@ -516,11 +588,20 @@ button:hover{
   align-items:flex-start;
 }
 
+
+
 .panelInputs{
+  width:450px; /* 👈 más delgado */
+
   background:#f9f9f9;
-  padding:15px;
-  border-radius:10px;
-  border:1px solid #ddd;
+
+  padding:12px;
+
+  border-radius:8px;
+
+  border:1px solid #dcdcdc;
+
+  box-sizing:border-box;
 }
 
 .panelResultados{
@@ -877,7 +958,7 @@ body{
     </div>
 
     <div class="sliderAdmin">
-      <img id="imgAdmin" src="Conuee.1.jpeg">
+      <img id="imgAdmin" src="Conuee.1.jpg">
     </div>
 
   </div>
@@ -914,7 +995,7 @@ body{
 
   <!-- DERECHA -->
   <div class="slider">
-    <img id="sliderImg" src="Conuee.1.jpeg">
+    <img id="sliderImg" src="Conuee.1.jpg">
   </div>
 
 </div>
@@ -999,6 +1080,22 @@ body{
 
 
 <div class="tabla">
+    <div class="tabsResultados">
+
+<button id="btnEconomico"
+onclick="mostrarEconomico()">
+
+💰 Ahorro Económico
+
+</button>
+
+<button id="btnEnergetico"
+ onclick="mostrarEnergetico()">
+⚡ Ahorro Energético
+</button>
+
+</div><br>
+
   <button onclick="abrirPozo()">➕ Agregar Pozo</button><br><br>
   <table id="tablaPozos">
     <thead>
@@ -1009,17 +1106,24 @@ body{
         <th>Bomba</th>
         <th>FP</th>
         <th>VV</th>
-        <th>Tarifa</th>
+        <th id="thInstalacion">
+        Instalacion eléctrica
+        </th>
+        <th id="thTarifa">Tarifa</th>
         <th>Total Ahorro</th>
-        <th>Inversion</th>
-        <th>Retorno de inversion (meses)</th>
-        <th>Editar</th>
-        <th>Eliminar</th>
+        <th id="thInversion">Inversion</th>
+        <th id="thRetorno">
+        Retorno de inversion (meses)
+        </th>
+        <th id="thEditar">Editar</th>
+
+        <th id="thEliminar">Eliminar</th>
         </tr>
     </thead>
 
-    <tbody>
-      <tfoot>
+    <tbody></tbody>
+
+<tfoot>
   <tr id="filaTotales">
     <td><b>TOTAL</b></td>
     <td id="totA"></td>
@@ -1027,15 +1131,16 @@ body{
     <td id="totC"></td>
     <td id="totD"></td>
     <td id="totE"></td>
+    <td id="totInstalacion"></td>
     <td id="totTarifa"></td>
     <td id="totAhorro"></td>
     <td id="totInversion"></td>
     <td id="totRetorno"></td>
-    <td></td>
-    <td></td>
+    <td id="totEditar"></td>
+    <td id="totEliminar"></td>
   </tr>
 </tfoot>
-    </tbody>
+   
   </table><br>
   <button onclick="exportarExcelPro()">📊 Descargar Reporte</button>
   <button id="btnVolver"
@@ -1138,6 +1243,67 @@ class="btn-volver">
 <!-- ================= MENU CALCULOS ================= -->
 <div id="menuCalculos" class="seccion oculto"></div>
 
+<!-- ================= INSTALACION ELECTRICA ================= -->
+
+<div id="modalInstalacion" class="modal oculto">
+
+<div class="modal-content">
+
+<h1>Instalación Eléctrica</h1>
+
+<button onclick="calcularInstalacion()">
+Calcular
+</button>
+
+<button onclick="cerrarModalInstalacion()">
+❌ Cerrar
+</button>
+
+<br><br>
+
+<div class="panelCalculo">
+
+<!-- IZQUIERDA -->
+<div class="panelInputs">
+
+<h2>Datos</h2>
+
+<div class="fila">
+  <label>Consumo actual</label>
+  <input id="consumo_inst">
+  <span>kWh</span>
+</div>
+
+<div class="fila">
+  <label>Nuevo consumo</label>
+  <input id="nuevo_consumo_inst">
+  <span>kWh</span>
+</div>
+
+<div class="fila">
+  <label>Costo energía</label>
+  <input id="costo_inst">
+  <span>$</span>
+</div>
+
+<div class="fila">
+  <label>Inversión</label>
+  <input id="inversion_inst">
+  <span>$</span>
+</div>
+
+</div>
+
+<!-- DERECHA -->
+<div class="panelResultados">
+
+<div id="resInstalacion">-</div>
+
+</div>
+
+</div>
+</div>
+</div>
 
 <!-- ================= CALCULO CAMBIO DE TARIFA ================= -->
 <div id="modalcalcTarifa" class="modal oculto">
@@ -1297,7 +1463,7 @@ class="btn-volver">
 <!-- DERECHA -->
 <div class="panelResultados">
 
-<div id="resA">-</div>
+<div id="resA"></div>
 
 </div>
 
@@ -1756,10 +1922,10 @@ class="btn-volver">
 
 <script>
 const imagenes = [
-  "Conuee.1.jpeg",
-  "Conuee.2.jpeg",
-  "Conuee.3.jpeg",
-  "Conuee.4.jpeg"
+  "Conuee.1.jpg",
+  "Conuee.2.jpg",
+  "Conuee.3.jpg",
+  "Conuee.4.jpg"
 ];
 
 let index = 0;
@@ -1768,7 +1934,7 @@ setInterval(() => {
 
   index = (index + 1) % imagenes.length;
 
-  // 🔥 LOGIN
+  //  LOGIN
   const slider =
   document.getElementById("sliderImg");
 
@@ -1776,7 +1942,7 @@ setInterval(() => {
     slider.src = imagenes[index];
   }
 
-  // 🔥 ADMIN
+  //  ADMIN
   const admin =
   document.getElementById("imgAdmin");
 
@@ -1812,6 +1978,7 @@ let proyectos = [];
 let proyectoActivo = null;
 let editandoIndex = null;
 let pozoActivo = null;
+let vistaTabla = "economico";
 let pozoEditando = null;
 let esAdmin = false;
 
@@ -1835,14 +2002,14 @@ async function cargarAdmin(){
   .orderBy("fechaCreacion", "desc") // 👈 más recientes primero
   .get();
 
-  usuarios = []; // 🔥 reset
+  usuarios = []; //  reset
 
   let html = "";
 
   snapshot.forEach(doc => {
 
     const u = doc.data();
-    // 🔥 NO MOSTRAR ADMINS
+    //  NO MOSTRAR ADMINS
 if(u.tipo === "admin") return;
     usuarios.push({
       id: doc.id,
@@ -1854,7 +2021,7 @@ if(u.tipo === "admin") return;
 
   });
 
-  // 🔥 ahora sí generar HTML con índice REAL
+  //  ahora sí generar HTML con índice REAL
   usuarios.forEach((u, index) => {
    html += `
 <div class="card-usuario">
@@ -1887,12 +2054,12 @@ if(u.tipo === "admin") return;
 function formatearFecha(fecha){
   if(!fecha) return "Sin fecha";
 
-  // 🔥 si ya es string (lo que queremos)
+  //  si ya es string (lo que queremos)
   if(typeof fecha === "string"){
     return fecha;
   }
 
-  // 🔥 fallback por si viene raro
+  //  fallback por si viene raro
   if(typeof fecha.toDate === "function"){
     return fecha.toDate().toLocaleDateString("es-MX");
   }
@@ -1924,7 +2091,7 @@ async function entrarUsuarioAdmin(index){
   document.getElementById("logoutUser").style.display = "none";
   document.getElementById("btnVolver").style.display = "inline-block";
 
-  // 🔥 cargar proyectos del usuario seleccionado (NO del admin)
+  //  cargar proyectos del usuario seleccionado (NO del admin)
   await cargarNubeAdmin(user.id);
 }
 
@@ -1957,7 +2124,7 @@ function limpiarPantalla(){
   if(tbody){
     tbody.innerHTML = `
 <tr>
-  <td colspan="12" style="text-align:center; padding:25px;">
+  <td colspan="13" style="text-align:center; padding:25px;">
     📁 Selecciona un proyecto para comenzar
   </td>
 </tr>
@@ -1968,6 +2135,14 @@ function limpiarPantalla(){
 document.getElementById("totA").innerText = "$ 0.00";
 document.getElementById("totAhorro").innerText = "$ 0.00";
 document.getElementById("totInversion").innerText = "$ 0.00";
+
+vistaTabla = "";
+
+document.getElementById("btnEconomico")
+.classList.remove("activo");
+
+document.getElementById("btnEnergetico")
+.classList.remove("activo");
 }
 
 
@@ -2052,7 +2227,7 @@ async function login(){
       console.log(doc.exists);
 console.log(doc.data());
 
-    // 🔥 verificar si existe en Firestore
+    //  verificar si existe en Firestore
     if(!doc.exists){
 
       alert("❌ Usuario no encontrado en base de datos");
@@ -2104,8 +2279,8 @@ async function cargarNube(){
 
 async function abrirUsuario(){
 
-   esAdmin = false; // 🔥 FORZAR
-  // 🔥 LIMPIA TODO PRIMERO
+   esAdmin = false; //  FORZAR
+  //  LIMPIA TODO PRIMERO
   proyectos = [];
   proyectoActivo = null;
 
@@ -2116,19 +2291,19 @@ async function abrirUsuario(){
   document.getElementById("logoutUser").style.display = "inline-block";
   document.getElementById("btnVolver").style.display = esAdmin ? "inline-block" : "none";
 
-  limpiarPantalla(); // 🔥 limpia UI
+  limpiarPantalla(); //  limpia UI
 
-  // 🔥 AHORA sí carga desde Firebase
+  //  AHORA sí carga desde Firebase
   await cargarNube();
 
-  // 🔥 NO cargues pozos aquí todavía
+  //  NO cargues pozos aquí todavía
   // porque no hay proyecto seleccionado
   document.getElementById("responsable").innerText = sesion.nombre || "Usuario";
 }
 
 function abrirAdmin(){
 
-  esAdmin = true; // 🔥 fuerza que sea admin
+  esAdmin = true; //  fuerza que sea admin
 
   document.getElementById("pantallaLogin").classList.add("oculto");
   document.getElementById("pantallaUsuario").classList.add("oculto");
@@ -2177,7 +2352,7 @@ async function exportarExcelPro(){
   }
 
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Reporte");
+  const sheet = workbook.addWorksheet("Resumen");
 
   // =============================
   // 🎨 COLORES
@@ -2193,10 +2368,10 @@ async function exportarExcelPro(){
   titulo.value = "REPORTE DE AHORRO DE ENERGÍA";
   titulo.font = { size: 16, bold: true, color: { argb: 'FF2E7D32' }};
   titulo.alignment = { vertical: 'middle', horizontal: 'center' };
-  resumen.getRow(1).height = 28;
-resumen.getRow(2).height = 28;
-resumen.getRow(3).height = 28;
-resumen.getRow(4).height = 28;
+  sheet.getRow(1).height = 28;
+  sheet.getRow(2).height = 28;
+  sheet.getRow(3).height = 28;
+  sheet.getRow(4).height = 28;
   titulo.fill = {
     type: 'pattern',
     pattern: 'solid',
@@ -2336,11 +2511,269 @@ for(let i = 7; i <= 8; i++){
     ext: { width: 120, height: 60 }
   });
 
+  crearHojaCalculo(
+  workbook,
+  proyectoActivo,
+  "Motor-Bomba",
+  "calcA"
+);
+
+crearHojaCalculo(
+  workbook,
+  proyectoActivo,
+  "Motor",
+  "calcB"
+);
+
+crearHojaCalculo(
+  workbook,
+  proyectoActivo,
+  "Bomba",
+  "calcC"
+);
+
+crearHojaCalculo(
+  workbook,
+  proyectoActivo,
+  "FP",
+  "calcD"
+);
+
+crearHojaCalculo(
+  workbook,
+  proyectoActivo,
+  "VV",
+  "calcE"
+);
+
   // =============================
   // 💾 DESCARGA
   // =============================
   const buffer = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buffer]), "Reporte_CONUEE_PRO.xlsx");
+
+}
+
+const etiquetas = {
+
+  // ==========================
+  // MOTOR-BOMBA
+  // ==========================
+  gasto: "Gasto (L/s)",
+  nisuccion: "Nivel de succión (m)",
+  alturaman: "Altura manométrica (m)",
+  presiondes: "Presión de descarga",
+  potelc: "Potencia eléctrica (HP)",
+  hropera_mb: "Horas de operación",
+  costointe: "Costo de energía ($/kWh)",
+  eficim: "Eficiencia del motor (%)",
+  eficib: "Eficiencia de la bomba (%)",
+  inversion_mb: "Inversión ($)",
+
+  eficiencia_electro: "Eficiencia electromecánica",
+  consumo_energia: "Consumo de energía",
+  fact_elect: "Factor eléctrico",
+  gasto_1: "Gasto propuesto",
+  carga: "Carga dinámica total",
+  eficiencia_electro_1: "Eficiencia electromecánica propuesta",
+  pot_deman: "Potencia demandada",
+  consumo_energia_1: "Consumo energético propuesto",
+  fact_elect_1: "Factor eléctrico propuesto",
+  ahorro: "Ahorro económico anual",
+  ahorroEnergetico: "Ahorro energético",
+  psri: "Periodo simple de recuperación",
+
+  // ==========================
+  // MOTOR
+  // ==========================
+  potnom: "Potencia nominal",
+  npolos: "Número de polos",
+  tnominal: "Tensión nominal",
+  efinomi: "Eficiencia nominal",
+  tipo: "Tipo de motor",
+  antiguo: "Motor existente",
+  nrebo: "Número de rebobinados",
+  hropera_m: "Horas de operación",
+  costoint: "Costo de energía",
+  vab: "Voltaje AB",
+  ia: "Corriente A",
+  vbc: "Voltaje BC",
+  ib: "Corriente B",
+  vca: "Voltaje CA",
+  ic: "Corriente C",
+  fp: "Factor de potencia",
+  potnom_1: "Potencia propuesta",
+  tnominal_1: "Tensión propuesta",
+  efinomi_1: "Eficiencia propuesta",
+  inversion_m: "Inversión",
+
+  pot_elec_dem: "Potencia eléctrica demandada",
+  pot_mec_entr: "Potencia mecánica de entrada",
+  fact_carga: "Factor de carga",
+  consum_energia: "Consumo de energía",
+  pot_elec_dem_1: "Potencia demandada propuesta",
+  fac_carga: "Factor de carga propuesto",
+  consum_energia_1: "Consumo energético propuesto",
+  ahorros: "Ahorro económico anual",
+  PSRI_1: "Periodo simple de recuperación",
+  desb_volt: "Desbalance de voltaje",
+  dif_volt: "Diferencia de voltaje",
+  resultado: "Diagnóstico",
+  resultadoFinal: "Resultado final",
+
+  // ==========================
+  // BOMBA
+  // ==========================
+  gasto_4: "Gasto",
+  nisuccion_4: "Nivel de succión",
+  altmano_4: "Altura manométrica",
+  presidescar_4: "Presión de descarga",
+  potelec_4: "Potencia eléctrica",
+  eficimotor_4: "Eficiencia del motor",
+  hropera_4: "Horas de operación",
+  costoenergi_4: "Costo de energía",
+  eficibom_4: "Eficiencia de la bomba",
+  inversion_4: "Inversión",
+
+  eficibomba_4: "Eficiencia de bomba",
+  consumoenergi_4: "Consumo energético",
+  factelec_4: "Factor eléctrico",
+  gasto_5: "Gasto propuesto",
+  carga_4: "Carga dinámica",
+  potelectri_4: "Potencia eléctrica propuesta",
+  consumenergi_4: "Consumo energético propuesto",
+  factelectri_4: "Factor eléctrico propuesto",
+  ahorro_4: "Ahorro económico anual",
+  psri_4: "Periodo simple de recuperación",
+
+  // ==========================
+  // FACTOR DE POTENCIA
+  // ==========================
+  fact_pot5: "Factor de potencia actual",
+  ener_consum5: "Energía consumida",
+  import_iva: "Importe con IVA",
+  hropera_5: "Horas de operación",
+  capa_capa: "Capacidad requerida",
+  costo_banco: "Costo banco de capacitores",
+  fact_potr: "Factor de potencia requerido",
+
+  capaci_capacir: "Capacidad de capacitores",
+  ahorro_espera: "Ahorro esperado",
+  fact_pot_espera: "Factor de potencia esperado",
+  ahorro_5: "Ahorro económico anual",
+  PSRI_5: "Periodo simple de recuperación",
+
+  // ==========================
+  // VARIADOR DE VELOCIDAD
+  // ==========================
+  nisuccion_6: "Nivel de succión",
+  altmano_6: "Altura manométrica",
+  numdiapro: "Días de operación",
+  consumenergi_6: "Consumo energético",
+  costoenergi_6: "Costo de energía",
+
+  presion1: "Presión punto 1",
+  caudal1: "Caudal punto 1",
+  dprom1: "Demanda promedio punto 1",
+
+  presion2: "Presión punto 2",
+  caudal2: "Caudal punto 2",
+  dprom2: "Demanda promedio punto 2",
+
+  presion3: "Presión punto 3",
+  caudal3: "Caudal punto 3",
+  dprom3: "Demanda promedio punto 3",
+
+  presionvv: "Presión con variador",
+  capacidadvv: "Capacidad del variador",
+  inversion_6: "Inversión",
+
+  ahorro_6: "Ahorro económico anual",
+  PSRI_6: "Periodo simple de recuperación",
+
+  // ==========================
+  // TARIFA
+  // ==========================
+  consumo_kwh: "Consumo mensual (kWh)",
+  costo_total: "Costo total",
+  demanda_kw: "Demanda (kW)",
+  horas_mes: "Horas por mes",
+  tarifa_om: "Tarifa OM",
+  tarifa_hm: "Tarifa HM",
+
+  tarifaActual: "Tarifa actual",
+  costoOM: "Costo OM",
+  costoHM: "Costo HM",
+  ahorroOM: "Ahorro OM",
+  ahorroHM: "Ahorro HM",
+  psriOM: "PSRI OM",
+  psriHM: "PSRI HM",
+  transformador: "Transformador",
+  capacitores: "Capacitores",
+  instalacion: "Instalación",
+  inversion: "Inversión",
+  tipoTarifa: "Tipo de tarifa",
+  mejorTarifa: "Mejor tarifa",
+  ahorroMejor: "Ahorro con mejor tarifa"
+};
+
+function crearHojaCalculo(workbook, proyectoActivo, nombreHoja, calculo){
+
+  const hoja = workbook.addWorksheet(nombreHoja);
+
+  proyectoActivo.pozos.forEach(p=>{
+
+    const calc = p[calculo];
+
+    if(!calc) return;
+    
+
+    // Título del pozo
+    let fila = hoja.addRow([`POZO: ${p.nombre}`]);
+
+    fila.font = { bold:true, size:14 };
+
+    hoja.addRow([]);
+
+    // Entradas
+    fila = hoja.addRow(["DATOS DE ENTRADA"]);
+
+    fila.font = { bold:true };
+
+   Object.entries(calc.inputs || {}).forEach(([k,v])=>{
+  hoja.addRow([
+    etiquetas[k] || k,
+    v
+  ]);
+});
+
+    hoja.addRow([]);
+
+    // Resultados
+    fila = hoja.addRow(["RESULTADOS"]);
+
+    fila.font = { bold:true };
+
+    Object.entries(calc).forEach(([k,v])=>{
+
+      if(k === "inputs") return;
+
+      hoja.addRow([
+  etiquetas[k] || k,
+  v
+]);
+
+    });
+
+    hoja.addRow([]);
+    hoja.addRow([]);
+  });
+
+  hoja.columns = [
+    { width: 35 },
+    { width: 25 }
+  ];
+
 }
 
 // ====== DOM ======
@@ -2450,7 +2883,8 @@ proyectoActivo.pozos.push({
   calcC: null,
   calcD: null,
   calcE: null,
-  calcTarifa: null
+  calcTarifa: null,
+  calcInstalacion: null
 });
 
   }
@@ -2730,11 +3164,101 @@ function seleccionarProyecto(i){
   organismoSpan.innerText = p.organismo || "-";
 
   cargarPozos(proyectoActivo.pozos || []);
+  mostrarEconomico();
 
   modalBuscador.classList.add("oculto");
 }
 
+function mostrarEconomico(){
+
+  vistaTabla = "economico";
+
+  // 🔥 activar botón
+  document.getElementById("btnEconomico")
+  .classList.add("activo");
+
+  // 🔥 desactivar otro
+  document.getElementById("btnEnergetico")
+  .classList.remove("activo");
+
+  cargarPozos(proyectoActivo.pozos);
+  actualizarColumnas();
+
+}
+
+function mostrarEnergetico(){
+
+  vistaTabla = "energetico";
+
+  // 🔥 activar botón
+  document.getElementById("btnEnergetico")
+  .classList.add("activo");
+
+  // 🔥 desactivar otro
+  document.getElementById("btnEconomico")
+  .classList.remove("activo");
+
+  cargarPozos(proyectoActivo.pozos);
+  actualizarColumnas();
+}
+
+function actualizarColumnas(){
+
+const mostrar =
+vistaTabla === "economico";
+
+
+// TH
+document.getElementById("thInstalacion")
+.style.display = mostrar ? "" : "none";
+
+document.getElementById("thTarifa")
+.style.display = mostrar ? "" : "none";
+
+document.getElementById("thInversion")
+.style.display = mostrar ? "" : "none";
+
+document.getElementById("thRetorno")
+.style.display = mostrar ? "" : "none";
+
+
+// TD
+document.querySelectorAll(".colInstalacion")
+.forEach(td=>{
+td.style.display = mostrar ? "" : "none";
+});
+
+document.querySelectorAll(".colTarifa")
+.forEach(td=>{
+td.style.display = mostrar ? "" : "none";
+});
+
+document.querySelectorAll(".colInversion")
+.forEach(td=>{
+td.style.display = mostrar ? "" : "none";
+});
+
+document.querySelectorAll(".colRetorno")
+.forEach(td=>{
+td.style.display = mostrar ? "" : "none";
+});
+
+document.getElementById("totInstalacion").style.display =
+mostrar ? "" : "none";
+
+document.getElementById("totTarifa").style.display =
+mostrar ? "" : "none";
+
+document.getElementById("totInversion").style.display =
+mostrar ? "" : "none";
+
+document.getElementById("totRetorno").style.display =
+mostrar ? "" : "none";
+
+}
 // ================== TABLA ==================
+
+
 function cargarPozos(pozos){
 
   if(!proyectoActivo || !pozos){
@@ -2742,13 +3266,56 @@ function cargarPozos(pozos){
     return;
   }
 
-  let totA=0, totB=0, totC=0, totD=0, totE=0, totTarifa=0;
-  let totAhorro=0, totInversion=0;
+  let totA=0,
+      totB=0,
+      totC=0,
+      totD=0,
+      totE=0,
+      totTarifa=0,
+      totInst=0;
+
+  let totAhorro=0,
+      totInversion=0;
+
   let html = "";
 
   pozos.forEach((pozo, i) => {
 
+    // =========================
+    // VISTA DINAMICA
+    // =========================
+
+    const valorMotorBomba =
+    vistaTabla === "economico"
+    ? (pozo.calcA?.ahorro || 0)
+    : (pozo.calcA?.ahorroEnergetico || 0);
+
+    const valorMotor =
+    vistaTabla === "economico"
+    ? (pozo.calcB?.ahorros || 0)
+    : (pozo.calcB?.ahorroEnergetico || 0);
+
+    const valorBomba =
+    vistaTabla === "economico"
+    ? (pozo.calcC?.ahorro_4 || 0)
+    : (pozo.calcC?.ahorroEnergetico || 0);
+
+    const valorFP =
+    vistaTabla === "economico"
+    ? (pozo.calcD?.ahorro_5 || 0)
+    : (pozo.calcD?.ahorroEnergetico || 0);
+
+    const valorVV =
+    vistaTabla === "economico"
+    ? (pozo.calcE?.ahorro_6 || 0)
+    : (pozo.calcE?.ahorroEnergetico || 0);
+
+    // =========================
+    // TOTALES
+    // =========================
+
     const inversionTotal =
+
       (pozo.calcA?.inputs?.inversion_mb || 0) +
       (pozo.calcB?.inputs?.inversion_m || 0) +
       (pozo.calcC?.inputs?.inversion_4 || 0) +
@@ -2757,102 +3324,292 @@ function cargarPozos(pozos){
       (pozo.calcTarifa?.inversion || 0);
 
     const ahorroTotal =
-      (pozo.calcA?.ahorro || 0) +
-      (pozo.calcB?.ahorros || 0) +
-      (pozo.calcC?.ahorro_4 || 0) +
-      (pozo.calcD?.ahorro_5 || 0) +
-      (pozo.calcE?.ahorro_6 || 0) +
-      (pozo.calcTarifa?.ahorroMejor || 0);
 
-    const retorno = ahorroTotal > 0 ? inversionTotal / ahorroTotal : 0;
+vistaTabla === "economico"
+
+?
+
+(
+(pozo.calcA?.ahorro || 0) +
+(pozo.calcB?.ahorros || 0) +
+(pozo.calcC?.ahorro_4 || 0) +
+(pozo.calcD?.ahorro_5 || 0) +
+(pozo.calcE?.ahorro_6 || 0) +
+(pozo.calcTarifa?.ahorroMejor || 0)
+)
+
+:
+
+(
+(pozo.calcA?.ahorroEnergetico || 0) +
+(pozo.calcB?.ahorroEnergetico || 0) +
+(pozo.calcC?.ahorroEnergetico || 0) +
+(pozo.calcD?.ahorroEnergetico || 0) +
+(pozo.calcE?.ahorroEnergetico || 0)
+);
+    const retorno =
+    ahorroTotal > 0
+    ? inversionTotal / ahorroTotal
+    : 0;
+
+    // =========================
+    // TABLA
+    // =========================
 
     html += `
-      <tr>
-        <td>${pozo.nombre}</td>
+    <tr>
 
-       <td class="accion 
-          ${(pozo.calcB || pozo.calcC) ? 'bloqueado' : ''} 
-          ${pozo.calcA ? 'ok' : ''}" 
-          onclick="${(pozo.calcB || pozo.calcC) ? '' : `irCalcA(${i})`}">
-          $ ${(pozo.calcA?.ahorro || 0).toLocaleString('es-MX',{minimumFractionDigits:2})}
-        </td>
+      <td>${pozo.nombre}</td>
 
-        <td class="accion 
-          ${pozo.calcA ? 'bloqueado' : ''} 
-          ${pozo.calcB ? 'ok' : ''}" 
-          onclick="${pozo.calcA ? '' : `irCalcB(${i})`}">
-          $ ${(pozo.calcB?.ahorros || 0).toLocaleString('es-MX',{minimumFractionDigits:2})}
-        </td>
+      <!-- MOTOR-BOMBA -->
+      <td class="accion 
+      ${(pozo.calcB || pozo.calcC) ? 'bloqueado' : ''} 
+      ${pozo.calcA ? 'ok' : ''}" 
+      onclick="${(pozo.calcB || pozo.calcC) ? '' : `irCalcA(${i})`}">
 
-        <td class="accion 
-          ${pozo.calcA ? 'bloqueado' : ''} 
-          ${pozo.calcC ? 'ok' : ''}" 
-          onclick="${pozo.calcA ? '' : `irCalcC(${i})`}">
-          $ ${(pozo.calcC?.ahorro_4 || 0).toLocaleString('es-MX',{minimumFractionDigits:2})}
-        </td>
+      ${vistaTabla === "economico" ? "$" : ""}
 
-        <td class="accion ${pozo.calcD ? 'ok' : ''}" onclick="irCalcD(${i})">
-            $ ${(pozo.calcD?.ahorro_5 || 0).toLocaleString('es-MX',{minimumFractionDigits:2})}
-        </td>
+      ${valorMotorBomba.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
 
-        <td class="accion ${pozo.calcE ? 'ok' : ''}" onclick="irCalcE(${i})">
-            $ ${(pozo.calcE?.ahorro_6 || 0).toLocaleString('es-MX',{minimumFractionDigits:2})}
-        </td>
+      ${vistaTabla === "energetico" ? " kWh" : ""}
 
-        <td class="accion ${pozo.calcTarifa ? 'ok' : ''}" onclick="irCalcTarifa(${i})">
-             $ ${(pozo.calcTarifa?.ahorroMejor || 0).toLocaleString('es-MX',{minimumFractionDigits:2})}
-        </td>
+      </td>
 
+      <!-- MOTOR -->
+      <td class="accion 
+      ${pozo.calcA ? 'bloqueado' : ''} 
+      ${pozo.calcB ? 'ok' : ''}" 
+      onclick="${pozo.calcA ? '' : `irCalcB(${i})`}">
+
+      ${vistaTabla === "economico" ? "$" : ""}
+
+      ${valorMotor.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
+      ${vistaTabla === "energetico" ? " kWh" : ""}
+
+      </td>
+
+      <!-- BOMBA -->
+      <td class="accion 
+      ${pozo.calcA ? 'bloqueado' : ''} 
+      ${pozo.calcC ? 'ok' : ''}" 
+      onclick="${pozo.calcA ? '' : `irCalcC(${i})`}">
+
+      ${vistaTabla === "economico" ? "$" : ""}
+
+      ${valorBomba.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
+      ${vistaTabla === "energetico" ? " kWh" : ""}
+
+      </td>
+
+      <!-- FP -->
+      <td class="accion ${pozo.calcD ? 'ok' : ''}" 
+      onclick="irCalcD(${i})">
+
+      ${vistaTabla === "economico" ? "$" : ""}
+
+      ${valorFP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
+      ${vistaTabla === "energetico" ? " kWh" : ""}
+
+      </td>
+
+      <!-- VV -->
+      <td class="accion ${pozo.calcE ? 'ok' : ''}" 
+      onclick="irCalcE(${i})">
+
+      ${vistaTabla === "economico" ? "$" : ""}
+
+      ${valorVV.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
+      ${vistaTabla === "energetico" ? " kWh" : ""}
+
+      </td>
+
+      <!-- INSTALACION -->
+      <td class="accion colInstalacion
+${pozo.calcInstalacion ? 'ok' : ''}"
+      onclick="irCalcInstalacion(${i})">
+
+      $ ${(pozo.calcInstalacion?.ahorroInst || 0)
+      .toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
+      </td>
+
+      <!-- TARIFA -->
+      <td class="accion colTarifa
+      ${pozo.calcTarifa ? 'ok' : ''}"
+      onclick="irCalcTarifa(${i})">
+
+      $ ${(pozo.calcTarifa?.ahorroMejor || 0)
+      .toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+      </td>
+
+      <!-- TOTAL -->
 <td class="ok">
-  $ ${(
-    (pozo.calcA?.ahorro || 0) +
-    (pozo.calcB?.ahorros || 0) +
-    (pozo.calcC?.ahorro_4 || 0) +
-    (pozo.calcD?.ahorro_5 || 0) +
-    (pozo.calcE?.ahorro_6 || 0) +
-    (pozo.calcTarifa?.ahorroMejor || 0)
-  ).toLocaleString('es-MX',{minimumFractionDigits:2})}
+
+${vistaTabla === "economico" ? "$" : ""}
+
+${ahorroTotal.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
+${vistaTabla === "energetico" ? " kWh" : ""}
+
 </td>
 
-<td class="ok">
-  $ ${inversionTotal.toLocaleString('es-MX',{minimumFractionDigits:2})}
+
+     <!-- INVERSION -->
+<td class="ok colInversion">
+
+$ ${inversionTotal.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}
+
 </td>
 
-<td class="${retorno < 12 ? 'positivo' : retorno < 24 ? '' : 'negativo'}">
-  ${retorno === 0 ? "-" : retorno.toFixed(2) + " meses"}
-</td>
+      <!-- RETORNO -->
+      <td class="colRetorno ${retorno < 12
+      ? 'positivo'
+      : retorno < 24
+      ? ''
+      : 'negativo'
+      }">
 
-<td class="col-eliminar">
+      ${retorno === 0
+      ? "-"
+      : retorno.toFixed(2) + " meses"}
+
+      </td>
+
+      <!-- EDITAR -->
+     <td class="col-eliminar colEditar">
   <button onclick="editarPozo(${i})">✏️</button>
-  </td>
-<td class="col-eliminar">
+</td>
+
+<td class="col-eliminar colEliminar">
   <button onclick="eliminarPozo(${i})">🗑️</button>
 </td>
-      </tr>
+
+    </tr>
     `;
-totA += pozo.calcA?.ahorro || 0;
-totB += pozo.calcB?.ahorros || 0;
-totC += pozo.calcC?.ahorro_4 || 0;
-totD += pozo.calcD?.ahorro_5 || 0;
-totE += pozo.calcE?.ahorro_6 || 0;
-totTarifa += pozo.calcTarifa?.ahorroMejor || 0;
 
-totAhorro += ahorroTotal;
-totInversion += inversionTotal;
+    // =========================
+    // TOTALES
+    // =========================
+
+    totA += valorMotorBomba;
+    totB += valorMotor;
+    totC += valorBomba;
+    totD += valorFP;
+    totE += valorVV;
+
+    totInst +=
+    (pozo.calcInstalacion?.ahorroInst || 0);
+
+    totTarifa +=
+    (pozo.calcTarifa?.ahorroMejor || 0);
+
+    totAhorro += ahorroTotal;
+
+    totInversion += inversionTotal;
+
   });
-totA = totA || 0;
 
-document.getElementById("totA").innerText = "$ " + totA.toLocaleString('es-MX',{minimumFractionDigits:2});
-document.getElementById("totB").innerText = "$ " + totB.toLocaleString('es-MX',{minimumFractionDigits:2});
-document.getElementById("totC").innerText = "$ " + totC.toLocaleString('es-MX',{minimumFractionDigits:2});
-document.getElementById("totD").innerText = "$ " + totD.toLocaleString('es-MX',{minimumFractionDigits:2});
-document.getElementById("totE").innerText = "$ " + totE.toLocaleString('es-MX',{minimumFractionDigits:2});
-document.getElementById("totTarifa").innerText = "$ " + totTarifa.toLocaleString('es-MX',{minimumFractionDigits:2});
+  // =========================
+  // MOSTRAR TOTALES
+  // =========================
 
-document.getElementById("totAhorro").innerText = "$ " + totAhorro.toLocaleString('es-MX',{minimumFractionDigits:2});
-document.getElementById("totInversion").innerText = "$ " + totInversion.toLocaleString('es-MX',{minimumFractionDigits:2});
+  document.getElementById("totA").innerText =
+  "$ " + totA.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+  document.getElementById("totB").innerText =
+  "$ " + totB.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+  document.getElementById("totC").innerText =
+  "$ " + totC.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+  document.getElementById("totD").innerText =
+  "$ " + totD.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+  document.getElementById("totE").innerText =
+  "$ " + totE.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+  document.getElementById("totInstalacion").innerText =
+  "$ " + totInst.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+  document.getElementById("totTarifa").innerText =
+  "$ " + totTarifa.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+ document.getElementById("totAhorro").innerText =
+vistaTabla === "economico"
+
+? "$ " + totAhorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})
+
+: totAhorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+}) + " kWh";
+
+  document.getElementById("totInversion").innerText =
+  "$ " + totInversion.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+});
+
+  // =========================
+  // CARGAR TABLA
+  // =========================
+
   tablaPozos.querySelector("tbody").innerHTML = html;
-  
+
 }
 
 
@@ -2944,7 +3701,10 @@ function verResultado(i){
   if(p.calcE) total += p.calcE.ahorro_6 || 0;
   if(p.calcTarifa) total += p.calcTarifa.ahorroMejor || 0;
 
-  alert("💰 Total ahorro mensual: $" + total.toLocaleString());
+  alert("💰 Total ahorro mensual: $" + total.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+}));
 }
 
 // ================== FUNCIONES PARA LOS FORMULARIOS O BOTONES ==================
@@ -3010,7 +3770,92 @@ function buscarPorFolio(e){
   
 }
 
+function calcularInstalacion(){
 
+const actual =
+parseFloat(document.getElementById("consumo_inst").value) || 0;
+
+const nuevo =
+parseFloat(document.getElementById("nuevo_consumo_inst").value) || 0;
+
+const costo =
+parseFloat(document.getElementById("costo_inst").value) || 0;
+
+const inversion =
+parseFloat(document.getElementById("inversion_inst").value) || 0;
+
+/* OPERACION */
+
+const ahorroKwh =
+actual + nuevo;
+
+const ahorro =
+ahorroKwh * costo;
+
+const retorno =
+ahorro > 0
+? inversion / ahorro
+: 0;
+
+/* RESULTADOS */
+
+resInstalacion.innerHTML = `
+
+<div class="resultado-fila">
+Ahorro kWh = <b>${ahorroKwh.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [-]</b>
+</div> 
+
+<div class="resultado-fila">
+Ahorro económico = <b>$ ${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [-]</b>
+</div> 
+
+<div class="resultado-fila">
+Retorno = <b>${retorno.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [-]</b>
+</div> 
+
+`;
+
+/* GUARDAR */
+
+const pozo =
+proyectoActivo.pozos[pozoActivo];
+
+pozo.calcInstalacion = {
+
+ahorroInst: ahorro,
+
+retornoInst: retorno,
+
+inversionInst: inversion,
+
+resultadoHTML:
+resInstalacion.innerHTML,
+
+inputs:{
+consumo_inst: actual,
+nuevo_consumo_inst: nuevo,
+costo_inst: costo,
+inversion_inst: inversion
+}
+
+};
+
+cargarPozos(
+proyectoActivo.pozos
+);
+
+guardarNube();
+
+}
 
 function calcularTarifa(){
 
@@ -3149,42 +3994,119 @@ resultadoTarifaCompleto.innerHTML = `
 
 <h3>Datos Actuales</h3>
 
-Tarifa actual estimada = <b> ${tarifaActual.toFixed(2)} [$/kWh]</b><br>
-Costo actual = <b>$ ${costo_total.toLocaleString()}</b><br>
-Clasificación = <b>${tipoTarifa}</b><br><br>
+<div class="resultado-fila">
+Tarifa actual estimada = <b> ${tarifaActual.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/kWh]</b>
+</div> 
+
+<div class="resultado-fila">
+Costo actual = <b>$ ${costo_total.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} 
+</div> 
+
+<div class="resultado-fila">
+Clasificación = <b>${tipoTarifa}</b>
+</div> 
 
 <h3>Costo estimado para tarifa OM</h3>
 
-Costo OM = <b>$ ${costoOM.toLocaleString()}</b><br>
-Ahorro OM = <b>$ ${ahorroOM.toLocaleString()}</b><br><br>
+<div class="resultado-fila">
+Costo OM = <b>$ ${costoOM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
+
+<div class="resultado-fila">
+Ahorro OM = <b>$ ${ahorroOM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
 
 <h3>Costo estimado para tarifa HM</h3>
 
-Costo HM = <b>$ ${costoHM.toLocaleString()}</b><br>
-Ahorro HM = <b>$ ${ahorroHM.toLocaleString()}</b><br><br>
+<div class="resultado-fila">
+Costo HM = <b>$ ${costoHM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
 
+<div class="resultado-fila">
+Ahorro HM = <b>$ ${ahorroHM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
 
 <h3>Inversion estimada para cambio de tarifa en instalciones electricas</h3>
 
-Transformador estimado = <b>$ ${transformador.toLocaleString()}</b><br>
-Banco de capacitores = <b>$ ${capacitores.toLocaleString()}</b><br>
-Instalación eléctrica = <b>$ ${instalacion.toLocaleString()}</b><br>
-Inversión estimada = <b>$ ${inversion.toLocaleString()}</b><br><br>
+<div class="resultado-fila">
+Transformador estimado = <b>$ ${transformador.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
 
+<div class="resultado-fila">
+Banco de capacitores = <b>$ ${capacitores.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
+
+<div class="resultado-fila">
+Instalación eléctrica = <b>$ ${instalacion.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
+
+<div class="resultado-fila">
+Inversión estimada = <b>$ ${inversion.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div> 
 
 <h3>Recuperacion de Inversion</h3>
 
-PSRI OM = <b>${psriOM.toFixed(2)} [meses]</b><br>
-PSRI HM = <b>${psriHM.toFixed(2)} [meses]</b><br>
+<div class="resultado-fila">
+PSRI OM = <b>${psriOM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div> 
+
+<div class="resultado-fila">
+PSRI HM = <b>${psriHM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div> 
 
 <h3>Recomendación de Tarifa</h3>
 
-La tarifa más conveniente es: <b>${mejorTarifa}</b><br>
-Ahorro estimado mensual: <b>$ ${ahorroMejor.toLocaleString('es-MX',{minimumFractionDigits:2})}</b><br><br>
-
+<div class="resultado-fila">
+La tarifa más conveniente es: <b>${mejorTarifa}</b>
+</div> 
+<div class="resultado-fila">
+Ahorro estimado mensual: <b>$ ${ahorroMejor.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b><br><br>
+</div> 
 <h3>Justificación</h3>
 
-El costo actual de energía es <b>${tarifaActual.toFixed(2)} $/kWh</b>, 
+El costo actual de energía es <b>${tarifaActual.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/kWh]</b>, 
 lo cual indica que el sistema opera con una tarifa relativamente alta 
 en comparación con tarifas de media tensión como OM o HM.<br><br>
 
@@ -3203,96 +4125,348 @@ guardarNube();
 
 // ================= CALCULOS =================
 function calcularA(){
-    const gasto = Number(document.getElementById("gasto").value)|| 0; 
-    const nisuccion = Number(document.getElementById("nisuccion").value)|| 0;
-    const alturaman = Number(document.getElementById("alturaman").value)|| 0;
-    const presiondes = Number(document.getElementById("presiondes").value)|| 0;
-    const potelc = Number(document.getElementById("potelc").value)|| 0;
-    const hropera_mb = Number(document.getElementById("hropera_mb").value)|| 0;
-    const costointe = Number(document.getElementById("costointe").value)|| 0;
-    const eficim = Number(document.getElementById("eficim").value)|| 0;
-    const eficib = Number(document.getElementById("eficib").value)|| 0;
-    const inversion_mb = Number(document.getElementById("inversion_mb").value)|| 0;
 
-if (!gasto || !nisuccion || !alturaman || !presiondes || !potelc || !hropera_mb || !costointe || !eficim || !eficib || !inversion_mb) {
-  alert("Completa todos los datos del cálculo");
-  return;
-  }
-        
+    // =========================
+    // INPUTS
+    // =========================
 
-  //Formulas de A
-  
-    const eficiencia_electro = (((((nisuccion+alturaman+presiondes*10)*1.01) *gasto*9.81/100)/potelc)*10)  || 0;
-    const consumo_energia = (potelc*hropera_mb);
-    const fact_elect = (consumo_energia*costointe);
-    const gasto_1 = (gasto);
-    const carga = ((nisuccion+alturaman+presiondes*10)*1.01);
-    const eficiencia_electro_1= ((eficim*eficib/1.09)/100);
-    const pot_deman= (potelc*eficiencia_electro/eficiencia_electro_1) || 0;
-    const consumo_energia_1 = (pot_deman*hropera_mb) || 0;
-    const fact_elect_1 = (consumo_energia_1*costointe) || 0;
-    const ahorro = (fact_elect-fact_elect_1) || 0;
-    const psri = (inversion_mb/ahorro) || 0;
+    const gasto =
+    Number(document.getElementById("gasto").value) || 0;
 
+    const nisuccion =
+    Number(document.getElementById("nisuccion").value) || 0;
 
-  proyectoActivo.pozos[pozoActivo].calcA={
-    inputs:{
-    gasto,
-    nisuccion, 
-    alturaman, 
-    presiondes,
-    potelc, 
-    hropera_mb, 
-    costointe, 
-    eficim, 
-    eficib, 
-    inversion_mb 
-},
+    const alturaman =
+    Number(document.getElementById("alturaman").value) || 0;
 
-    eficiencia_electro,
-    consumo_energia,
-    fact_elect,
-    gasto_1,
-    carga,
-    eficiencia_electro_1,
-    pot_deman,
-    consumo_energia_1,
-    fact_elect_1,
-    ahorro,
-    psri
+    const presiondes =
+    Number(document.getElementById("presiondes").value) || 0;
+
+    const potelc =
+    Number(document.getElementById("potelc").value) || 0;
+
+    const hropera_mb =
+    Number(document.getElementById("hropera_mb").value) || 0;
+
+    const costointe =
+    Number(document.getElementById("costointe").value) || 0;
+
+    const eficim =
+    Number(document.getElementById("eficim").value) || 0;
+
+    const eficib =
+    Number(document.getElementById("eficib").value) || 0;
+
+    const inversion_mb =
+    Number(document.getElementById("inversion_mb").value) || 0;
+
+    // =========================
+    // VALIDACION
+    // =========================
+
+    if(
+      !gasto ||
+      !nisuccion ||
+      !alturaman ||
+      !presiondes ||
+      !potelc ||
+      !hropera_mb ||
+      !costointe
+    ){
+
+      alert("Completa todos los datos del cálculo");
+
+      return;
+
+    }
+
+    // =========================
+    // FORMULAS
+    // =========================
+
+    const eficiencia_electro =
+
+    ((((
+    nisuccion +
+    alturaman +
+    presiondes * 10
+    ) * 1.01) *
+
+    gasto *
+
+    9.81 / 100) /
+
+    potelc) * 10 || 0;
+
+    // =========================
+    // SISTEMA ACTUAL
+    // =========================
+
+    const consumo_energia =
+    (potelc * hropera_mb) || 0;
+
+    const fact_elect =
+    (consumo_energia * costointe) || 0;
+
+    // =========================
+    // PROPUESTA
+    // =========================
+
+    const gasto_1 =
+    gasto || 0;
+
+    const carga =
+    ((nisuccion + alturaman + presiondes * 10) * 1.01) || 0;
+
+    const eficiencia_electro_1 =
+
+    ((eficim * eficib / 1.09) / 100) || 0;
+
+    const pot_deman =
+
+    eficiencia_electro_1 === 0
+
+    ? 0
+
+    : (potelc * eficiencia_electro / eficiencia_electro_1);
+
+    const consumo_energia_1 =
+
+    (pot_deman * hropera_mb) || 0;
+
+    const fact_elect_1 =
+
+    (consumo_energia_1 * costointe) || 0;
+
+    // =========================
+    // AHORRO ECONOMICO
+    // =========================
+
+    const ahorro =
+
+    (fact_elect <= 0 || fact_elect_1 <= 0)
+
+    ? 0
+
+    : Math.abs(
+      fact_elect - fact_elect_1
+    );
+
+    // =========================
+    // AHORRO ENERGETICO
+    // =========================
+
+    const ahorroEnergetico =
+
+    Math.abs(
+      consumo_energia -
+      consumo_energia_1
+    );
+
+    
+
+    // =========================
+    // RETORNO
+    // =========================
+
+    const psri =
+
+    ahorro <= 0
+
+    ? 0
+
+    : Math.abs(
+      inversion_mb / ahorro
+    );
+
+    // =========================
+    // GUARDAR
+    // =========================
+
+    proyectoActivo.pozos[pozoActivo].calcA = {
+
+      // INPUTS
+      inputs:{
+
+        gasto,
+        nisuccion,
+        alturaman,
+        presiondes,
+        potelc,
+        hropera_mb,
+        costointe,
+        eficim,
+        eficib,
+        inversion_mb
+
+      },
+
+      // RESULTADOS
+      eficiencia_electro,
+      consumo_energia,
+      fact_elect,
+      gasto_1,
+      carga,
+      eficiencia_electro_1,
+      pot_deman,
+      consumo_energia_1,
+      fact_elect_1,
+
+      // 💰
+      ahorro,
+
+      // ⚡
+      ahorroEnergetico,
+
+      // retorno
+      psri
+
     };
 
-   resA.innerHTML = `
-<h3> Situación Actual</h3>
+    // =========================
+    // RESULTADOS HTML
+    // =========================
 
-<div class="fila-semaforo">
-  Eficiencia electromecánica =<b>${eficiencia_electro.toFixed(2)} [%]</b>
-  <span class="semaforo" id="semaforoA_calc"></span>
-</div>
-    Consumo de energía = <b>${consumo_energia.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-    Facturación eléctrica = <b>${fact_elect.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+    resA.innerHTML = `
 
-<h3>Especificación del equipo a proponer</h3>
-    Gasto = <b>${gasto_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [Ips]</b><br>
-    Carga = <b>${carga.toLocaleString('es-MX',{minimumFractionDigits:2})} [mca]</b><br>
+    <h2>Situación Actual</h2>
 
-<h3> Sistema propuesto</h3>
-    Eficiencia electromecánica = <b>${eficiencia_electro_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-    Potencia demandada = <b>${pot_deman.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-    Consumo de energía = <b>${consumo_energia_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-    Facturación eléctrica = <b>${fact_elect_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+    <div class="fila-semaforo">
 
-<h3> Evaluacion economica</h3>
-    Ahorros = <b>${ahorro.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-    PSRI = <b>${psri.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
+      <div class="resultado-fila">
+      Eficiencia electromecánica =
+      <b>${eficiencia_electro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+      </div>
 
-  `;
-  
-  actualizarPozos();
- guardarNube();
- activarSemaforo(eficiencia_electro);
-  
+      <span class="semaforo" id="semaforoA_calc"></span>
+
+    </div>
+
+    <div class="resultado-fila">
+      Consumo de energía =
+      <b>
+      ${consumo_energia.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]
+      </b>
+    </div>
+
+    <div class="resultado-fila">
+      Facturación eléctrica =
+      <b>
+      ${fact_elect.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]
+      </b>
+    </div>
+
+    <h2>Especificación del equipo a proponer</h2>
+
+    <div class="resultado-fila">
+      Gasto =
+      <b>
+      ${gasto_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [Ips]
+      </b>
+    </div>
+
+    <div class="resultado-fila">
+      Carga =
+      <b>
+      ${carga.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [mca]
+      </b>
+    </div>
+
+    <h2>Sistema propuesto</h2>
+
+    <div class="resultado-fila">
+      Eficiencia electromecánica =
+      <b>
+      ${eficiencia_electro_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]
+      </b>
+    </div>
+
+    <div class="resultado-fila">
+      Potencia demandada =
+      <b>
+      ${pot_deman.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]
+      </b>
+    </div>
+
+    <div class="resultado-fila">
+      Consumo de energía =
+      <b>
+      ${consumo_energia_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]
+      </b>
+    </div>
+
+    <div class="resultado-fila">
+      Facturación eléctrica =
+      <b>
+      ${fact_elect_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]
+      </b>
+    </div>
+
+    <h2>Evaluación económica</h2>
+
+    <div class="resultado-fila">
+      Ahorros =
+      <b>
+      ${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]
+      </b>
+    </div>
+
+    <div class="resultado-fila">
+      PSRI =
+      <b>
+      ${psri.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]
+      </b>
+    </div>
+
+    `;
+
+    // =========================
+    // ACTUALIZAR
+    // =========================
+
+    actualizarPozos();
+
+    guardarNube();
+
+    activarSemaforo(
+      eficiencia_electro
+    );
+
 }
+
 
 function calcularB(){
     const potnom = Number(document.getElementById("potnom").value);
@@ -3316,16 +4490,11 @@ function calcularB(){
     const efinomi_1 = Number(document.getElementById("efinomi_1").value);
     const inversion_m = Number(document.getElementById("inversion_m").value);
    
-
- //if (!potnom || !npolos || !tnominal || !efinomi || !tipo || !antiguo || !nrebo || !hropera_m || !costoint || !vab || !ia || !vbc || !ib || !vca || !ic ||!fp || !potnom_1 || !tnominal_1 || !efinomi_1 || !inversion_m) {
-   //     alert("Completa todos los datos del cálculo");
-     //   return;
-    //}
-
-    if (!potnom) {
+ if (!potnom || !npolos || !tnominal || !efinomi || !tipo || !antiguo || !nrebo || !hropera_m || !costoint || !vab || !ia || !vbc || !ib || !vca || !ic ||!fp) {
         alert("Completa todos los datos del cálculo");
-      return;
+        return;
     }
+
 
 
 
@@ -3336,21 +4505,39 @@ function calcularB(){
     const fact_carga = ((pot_mec_entr/potnom)*100)|| 0; 
     const consum_energia = (pot_elec_dem*hropera_m)|| 0; 
     const fact_elec = (consum_energia*costoint)|| 0; 
-    const pot_elec_dem_1 = (((pot_mec_entr*0.746)/efinomi_1)*100)|| 0; 
-    const fac_carga = ((pot_mec_entr/potnom_1)*100)|| 0; 
+    const pot_elec_dem_1 = efinomi_1  === 0 ? 0 : (((pot_mec_entr*0.746)/efinomi_1)*100)|| 0;  
+    const fac_carga = potnom_1  === 0 ? 0 :  ((pot_mec_entr/potnom_1)*100)|| 0; 
     const consum_energia_1 = (pot_elec_dem_1*hropera_m)|| 0; 
     const fact_elec_1 = (consum_energia_1*costoint)|| 0; 
-    const ahorros = (fact_elec-fact_elec_1)|| 0; 
+
+    // =========================
+    // AHORRO ENERGETICO
+    // =========================
+    const ahorroEnergetico =
+    Math.abs(
+      consum_energia -
+      consum_energia_1
+    ) || 0;
+
+
+     // =========================
+    // AHORRO ECONOMICOS
+    // =========================
+    const ahorros =
+
+
+  (fact_elec <= 0 || fact_elec_1 <= 0) ? 0: Math.abs(fact_elec -fact_elec_1) || 0;
+
     const PSRI_1 = (inversion_m/ahorros)|| 0; 
     const prome = ((vab+vbc+vca)/3)|| 0; 
     const desb_volt = (Math.max(
     (Math.max(vab,vbc,vca) - prome),
     (prome - Math.min(vab,vbc,vca))
-) / prome) * 100|| 0; 
+    ) / prome) * 100|| 0; 
 
-const dif_volt = ((prome - tnominal) / tnominal) * 100|| 0; 
+    const dif_volt = ((prome - tnominal) / tnominal) * 100|| 0; 
     const fe5= efinomi/100|| 0; 
-let resultado;
+    let resultado;
 
 if (fe5 > 0) {
     resultado = fe5;
@@ -3383,6 +4570,7 @@ if (nrebo === 1) {
 } else if (nrebo > 1) {
     restaFinal = 0.03;
 }
+
 
 const resultadoFinal = (resultado - restaFinal) * 100|| 0; 
 
@@ -3419,7 +4607,11 @@ const resultadoFinal = (resultado - restaFinal) * 100|| 0;
     fac_carga,
     consum_energia_1,
     fact_elec_1,
-    ahorros,
+     // 💰
+  ahorros,
+
+  // ⚡
+  ahorroEnergetico,
     PSRI_1,
     desb_volt,
     dif_volt,
@@ -3431,27 +4623,109 @@ const resultadoFinal = (resultado - restaFinal) * 100|| 0;
 
     <h3> Condiciones de operación actuales</h3>
     
-    Eficiencia del Motor = <b>${resultadoFinal.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-    Potencia eléctrica demandada = <b>${pot_elec_dem.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-    Potencia mecánica entregada = <b>${pot_mec_entr.toLocaleString('es-MX',{minimumFractionDigits:2})} [HP]</b><br>
-    Factor de carga = <b>${fact_carga.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-    Consumo de energía = <b>${consum_energia.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-    Facturación eléctrica = <b>${fact_elec.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+    <div class="resultado-fila">
+    Eficiencia del Motor = <b>${resultadoFinal.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+      </div>
+
+    <div class="resultado-fila">
+    Potencia eléctrica demandada = <b>${pot_elec_dem.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Potencia mecánica entregada = <b>${pot_mec_entr.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [HP]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Factor de carga = <b>${fact_carga.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Consumo de energía = <b>${consum_energia.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Facturación eléctrica = <b>${fact_elec.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+      </div>  
 
     <h3> Sistema propuesto</h3>
-    Potencia eléctrica demandada = <b>${pot_elec_dem_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-    Factor de carga = <b>${fac_carga.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-    Consumo de energía = <b>${consum_energia_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-    Facturación eléctrica = <b>${fact_elec_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-    
+
+    <div class="resultado-fila">
+    Potencia eléctrica demandada = <b>${pot_elec_dem_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Factor de carga = <b>${fac_carga.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Consumo de energía = <b>${consum_energia_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Facturación eléctrica = <b>${fact_elec_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+      </div>  
+
     <h3> Evaluación económica</h3>
-    Ahorros = <b>${ahorros.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-    PSRI = <b>${PSRI_1.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
-    
+
+    <div class="resultado-fila">
+    Ahorros = <b>${ahorros.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    PSRI = <b>${PSRI_1.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+    </div>  
+
     <h3> Observaciones acerca de las condiciones actuales</h3>
-    Desbalance de voltaje = <b>${desb_volt.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-    Diferencia de voltaje respecto al nominal = <b>${dif_volt.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-    
+
+    <div class="resultado-fila">
+    Desbalance de voltaje = <b>${desb_volt.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+      </div>  
+
+    <div class="resultado-fila">
+    Diferencia de voltaje respecto al nominal = <b>${dif_volt.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+    </div>  
   `;
 
 
@@ -3476,7 +4750,7 @@ function calcularC(){
    const eficibom_4 = Number(document.getElementById("eficibom_4").value)|| 0;
    const inversion_4 = Number(document.getElementById("inversion_4").value)|| 0;
   
- if (!gasto_4 || !nisuccion_4 || !altmano_4 || !presidescar_4 || !potelec_4 || !eficimotor_4 || !hropera_4 || !costoenergi_4 || !eficibom_4 || !inversion_4) {
+ if (!gasto_4 || !nisuccion_4 || !altmano_4 || !presidescar_4 || !potelec_4 || !eficimotor_4 || !hropera_4 || !costoenergi_4) {
      alert("Completa todos los datos del cálculo");
         return;
     }
@@ -3492,10 +4766,30 @@ function calcularC(){
     const factelec_4 = (consumoenergi_4*costoenergi_4)|| 0; 
     const gasto_5 = (gasto_4)|| 0; 
     const carga_4 = ((nisuccion_4+altmano_4+presidescar_4*10)*1.11)|| 0; 
-    const potelectri_4 = ((potelec_4*eficibomba_4)/eficibom_4)|| 0; 
-    const consumenergi_4 = (potelectri_4*hropera_4)*100|| 0; 
+    const potelectri_4 =  eficibom_4 === 0 ? 0 : ((potelec_4*eficibomba_4)/eficibom_4)|| 0; 
+    const consumenergi_4 = (potelectri_4*hropera_4)|| 0; 
     const factelectri_4 = (consumenergi_4*costoenergi_4)|| 0; 
-    const ahorro_4 = (factelec_4-factelectri_4)|| 0; 
+
+
+
+
+
+
+       // =========================
+    // AHORRO ENERGETICO
+    // =========================
+   const ahorroEnergetico =
+    Math.abs(
+      consumoenergi_4 -
+      consumenergi_4
+    ) || 0;
+
+
+       // =========================
+    // AHORRO ECONOMICO
+    // =========================
+    const ahorro_4 = 
+    (factelec_4 <= 0 || factelectri_4 <= 0) ? 0: Math.abs(factelec_4-factelectri_4); 
     const psri_4 = (inversion_4/ahorro_4)|| 0; 
    
 
@@ -3523,28 +4817,91 @@ function calcularC(){
     potelectri_4,
     consumenergi_4,
     factelectri_4,
-    ahorro_4, 
+     // 💰 ahorro económico
+  ahorro_4,
+
+  // ⚡ ahorro energético
+  ahorroEnergetico,
     psri_4
   };
   resC.innerHTML = `
   <h3> Situación Actual</h3>
-  Eficiencia Bomba = <b>${(eficibomba_4).toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-  Consumo de energía = <b> ${consumoenergi_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-  Facturacion Electrica = <b> ${factelec_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-  
+
+   <div class="resultado-fila">
+  Eficiencia Bomba = <b>${(eficibomba_4).toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+    </div> 
+
+   <div class="resultado-fila">
+  Consumo de energía = <b> ${consumoenergi_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+    </div> 
+
+   <div class="resultado-fila">
+  Facturacion Electrica = <b> ${factelec_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+    </div> 
+
   <h3> Especificación del equipo a proponer</h3>
-  Gasto = <b>${gasto_5.toLocaleString('es-MX',{minimumFractionDigits:2})} [Ips]</b><br>
-  Carga = <b>${carga_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [mca]</b><br>
-  
+
+<div class="resultado-fila">
+  Gasto = <b>${gasto_5.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [Ips]</b>
+</div> 
+
+<div class="resultado-fila">
+  Carga = <b>${carga_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [mca]</b>
+  </div> 
+
   <h3> Sistema propuesto</h3>
-  Potencia eléctrica demandada = <b>${(potelectri_4).toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-  Consumo de energía = <b>${consumenergi_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-  Facturacion Electrica = <b>${factelectri_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-  
+
+  <div class="resultado-fila">
+  Potencia eléctrica demandada = <b>${(potelectri_4).toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+</div> 
+
+  <div class="resultado-fila">
+  Consumo de energía = <b>${consumenergi_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div> 
+
+  <div class="resultado-fila">
+  Facturacion Electrica = <b>${factelectri_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+  </div> 
+
   <h3> Evaluación económica</h3>
-  Ahorros = <b>${ahorro_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-  PSRI = <b>${psri_4.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
-  
+
+  <div class="resultado-fila">
+  Ahorros = <b>${ahorro_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div> 
+
+  <div class="resultado-fila">
+  PSRI = <b>${psri_4.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+  </div> 
   
   
   
@@ -3574,11 +4931,10 @@ const fp5 = fact_pot5 / 100;
 const fpr = fact_potr / 100;
 
 
- if (!fact_pot5 || !ener_consum5 || !import_iva || !hropera_5 || !capa_capa || !costo_banco || !fact_potr) {
+ if (!fact_pot5 || !ener_consum5 || !import_iva || !hropera_5) {
         alert("Completa todos los datos del cálculo");
        return;
     }
-
 
 // Fórmulas de D
  
@@ -3646,15 +5002,45 @@ const PSRI_5 = (costo_banco/ahorro_5)|| 0;
 
 
   resD.innerHTML=`
+
   <h3> Recomendación</h3>
-  Capacidad del capacitor recomendado = <b>${capaci_capacir.toLocaleString('es-MX',{minimumFractionDigits:2})} [kVar]</b><br>
-  Ahorro esperado = <b> ${ahorro_espera.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
- 
+
+  <div class="resultado-fila">
+  Capaci. del capacitor recomendado = <b>${capaci_capacir.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kVar]</b>
+</div> 
+
+  <div class="resultado-fila">
+  Ahorro esperado = <b> ${ahorro_espera.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+ </div> 
+
   <h3> Evaluación Económica</h3>
-  Factor de potencia esperado = <b>${fact_pot_espera.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-  Ahorro = <b>${ahorro_5.toLocaleString('es-MX',{minimumFractionDigits:1})} [$/mes]</b><br>
-  PSRI = <b> ${PSRI_5.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
-  
+
+  <div class="resultado-fila">
+  Factor de potencia esperado = <b>${fact_pot_espera.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div> 
+
+  <div class="resultado-fila">
+  Ahorro = <b>${ahorro_5.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div> 
+
+  <div class="resultado-fila">
+  PSRI = <b> ${PSRI_5.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+  </div> 
   `;
 
 
@@ -3686,7 +5072,7 @@ function calcularE(){
 
 
 
-  if (!nisuccion_6 || !altmano_6 || !numdiapro || !consumenergi_6 || !costoenergi_6 || !presion1 || !caudal1 || !dprom1 || !presion2 || !caudal2 ||!dprom2 || !presion3 || !caudal3 || !dprom3 || !presionvv ||! capacidadvv || !inversion_6) {
+if (!nisuccion_6 || !altmano_6 || !numdiapro || !consumenergi_6 || !costoenergi_6 || !presion1 || !caudal1 || !dprom1 || !presion2 || !caudal2 ||!dprom2 || !presion3 || !caudal3 || !dprom3) {
         alert("Completa todos los datos del cálculo");
        return;
     }
@@ -3726,9 +5112,19 @@ function calcularE(){
   resE.innerHTML=`
   
   <h3> Evaluación Económica</h3>
+<div class="resultado-fila">
+  Ahorro = <b>${ahorro_6.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div> 
 
-  Ahorro = <b>${ahorro_6.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-  PSRI = <b> ${PSRI_6.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
+<div class="resultado-fila">
+  PSRI = <b> ${PSRI_6.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+  </div> 
   
   `;
 
@@ -3870,6 +5266,7 @@ resB.innerHTML = "-";
 resC.innerHTML = "-";
 resD.innerHTML = "-";
 resE.innerHTML = "-";
+resInstalacion.innerHTML = "-";
 resultadoTarifaCompleto.innerHTML= "-";
 
 }
@@ -3901,6 +5298,56 @@ function volverMenuCalculos(){
 
 function abrirCalcTarifa(){
   modalcalcTarifa.classList.remove("oculto");
+}
+
+function irCalcInstalacion(i){
+
+  // 🔥 CAMBIAR POZO ACTIVO
+  pozoActivo = i;
+
+  const pozo =
+  proyectoActivo.pozos[i];
+
+  // =========================
+  // LIMPIAR SI NO HAY DATOS
+  // =========================
+
+  if(!pozo.calcInstalacion){
+
+    document.getElementById("consumo_inst").value = "";
+    document.getElementById("nuevo_consumo_inst").value = "";
+    document.getElementById("costo_inst").value = "";
+    document.getElementById("inversion_inst").value = "";
+
+    resInstalacion.innerHTML = "-";
+  }
+
+  // =========================
+  // CARGAR DATOS DEL POZO
+  // =========================
+
+  else{
+
+    cargarInputs(
+      pozo.calcInstalacion.inputs
+    );
+
+    resInstalacion.innerHTML =
+    pozo.calcInstalacion.resultadoHTML || "-";
+  }
+
+  // 🔥 ABRIR MODAL
+  document.getElementById("modalInstalacion")
+  .classList.remove("oculto");
+
+}
+
+
+function cerrarModalInstalacion(){
+
+document.getElementById("modalInstalacion")
+.classList.add("oculto");
+
 }
 
 function cerrarModalTarifa(){
@@ -3968,32 +5415,84 @@ const ahorro = data.ahorro ?? 0;
 const psri = data.psri ?? 0;
 
 resA.innerHTML = `
-<h3>Situación Actual</h3>
+<h2>Situación Actual</h2>
 
 <div class="fila-semaforo">
-  Eficiencia electromecánica =
-  <b>${eficiencia.toFixed(2)} [%]</b>
+  <div class="resultado-fila">
+  Eficiencia electromecánica = <b>${eficiencia.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+  </div>
   <span class="semaforo"></span>
 </div>
-Consumo de energía = <b>${consumo.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-Facturación eléctrica = <b>${fact.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Consumo de energía = <b>${consumo.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div>
+ <div class="resultado-fila">
+Facturación eléctrica = <b>${fact.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
-<h3>Especificación del equipo a proponer</h3>
+<h2>Especificación del equipo a proponer</h2>
+ <div class="resultado-fila">
+Gasto = <b>${gasto.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [Ips]</b>
+</div>
+ <div class="resultado-fila">
+Carga = <b>${carga.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [mca]</b>
+</div>
 
-Gasto = <b>${gasto.toLocaleString('es-MX',{minimumFractionDigits:2})} [Ips]</b><br>
-Carga = <b>${carga.toLocaleString('es-MX',{minimumFractionDigits:2})} [mca]</b><br>
+<h2>Sistema propuesto</h2>
 
-<h3>Sistema propuesto</h3>
+ <div class="resultado-fila">
+Eficiencia electromecánica = <b>${eficienciaProp.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
+ <div class="resultado-fila">
+Potencia demandada = <b>${pot.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+</div>
+ <div class="resultado-fila">
+Consumo de energía = <b>${consumoProp.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div>
+ <div class="resultado-fila">
+Facturación eléctrica = <b>${factProp.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
-Eficiencia electromecánica = <b>${eficienciaProp.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-Potencia demandada = <b>${pot.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-Consumo de energía = <b>${consumoProp.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-Facturación eléctrica = <b>${factProp.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-
-<h3>Evaluación económica</h3>
-
-Ahorros = <b>${ahorro.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-PSRI = <b>${psri.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
+<h2>Evaluación económica</h2>
+ <div class="resultado-fila">
+Ahorros = <b>${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
+ <div class="resultado-fila">
+PSRI = <b>${psri.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div>
 `;
 const semaforo = resA.querySelector(".semaforo");
 
@@ -4032,31 +5531,109 @@ const dif = data.dif_volt ?? 0;
 resB.innerHTML = `
 
 <h3>Condiciones de operación actuales</h3>
+<div class="resultado-fila">
+Eficiencia del Motor = <b>${eficiencia.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
 
-Eficiencia del Motor = <b>${eficiencia.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-Potencia eléctrica demandada = <b>${potElec.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-Potencia mecánica entregada = <b>${potMec.toLocaleString('es-MX',{minimumFractionDigits:2})} [HP]</b><br>
-Factor de carga = <b>${carga.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-Consumo de energía = <b>${consumo.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-Facturación eléctrica = <b>${fact.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Potencia eléctrica demandada = <b>${potElec.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+</div>
+
+<div class="resultado-fila">
+Potencia mecánica entregada = <b>${potMec.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [HP]</b>
+</div>
+
+<div class="resultado-fila">
+Factor de carga = <b>${carga.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
+
+<div class="resultado-fila">
+Consumo de energía = <b>${consumo.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div>
+
+<div class="resultado-fila">
+Facturación eléctrica = <b>${fact.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
 <h3>Sistema propuesto</h3>
 
-Potencia eléctrica demandada = <b>${potElecP.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-Factor de carga = <b>${cargaP.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-Consumo de energía = <b>${consumoP.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-Facturación eléctrica = <b>${factP.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Potencia eléctrica demandada = <b>${potElecP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+</div>
+
+<div class="resultado-fila">
+Factor de carga = <b>${cargaP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
+
+<div class="resultado-fila">
+Consumo de energía = <b>${consumoP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div>
+
+<div class="resultado-fila">
+Facturación eléctrica = <b>${factP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
 <h3>Evaluación económica</h3>
 
-Ahorros = <b>${ahorro.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-PSRI = <b>${psri.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
+<div class="resultado-fila">
+Ahorros = <b>${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
+
+<div class="resultado-fila">
+PSRI = <b>${psri.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div>
 
 <h3> Observaciones acerca de las condiciones actuales</h3>
 
-Desbalance de voltaje = <b>${desb.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-Diferencia de voltaje respecto al nominal = <b>${dif.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
+<div class="resultado-fila">
+Desbalance de voltaje = <b>${desb.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
 
+<div class="resultado-fila">
+Diferencia de voltaje respecto al nominal = <b>${dif.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
 `;
 }
 
@@ -4080,26 +5657,81 @@ resC.innerHTML = `
 
 <h3>Situación Actual</h3>
 
-Eficiencia Bomba = <b>${eficiencia.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
-Consumo de energía = <b>${consumo.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-Facturación Eléctrica = <b>${fact.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Eficiencia Bomba = <b>${eficiencia.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
+
+<div class="resultado-fila">
+Consumo de energía = <b>${consumo.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div>
+
+<div class="resultado-fila">
+Facturación Eléctrica = <b>${fact.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
  <h3> Especificación del equipo a proponer</h3>
 
-Gasto = <b>${gasto.toLocaleString('es-MX',{minimumFractionDigits:2})} [lps]</b><br>
-Carga = <b>${carga.toLocaleString('es-MX',{minimumFractionDigits:2})} [mca]</b><br>
+ <div class="resultado-fila">
+Gasto = <b>${gasto.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [lps]</b>
+</div>
+
+<div class="resultado-fila">
+Carga = <b>${carga.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [mca]</b>
+</div>
 
 <h3>Sistema propuesto</h3>
 
-Potencia eléctrica demandada = <b>${pot.toLocaleString('es-MX',{minimumFractionDigits:2})} [kW]</b><br>
-Consumo de energía = <b>${consumoP.toLocaleString('es-MX',{minimumFractionDigits:2})} [kWh/mes]</b><br>
-Facturacion Electrica = <b>${factP.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Potencia eléctrica demandada = <b>${pot.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kW]</b>
+</div>
+
+<div class="resultado-fila">
+Consumo de energía = <b>${consumoP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kWh/mes]</b>
+</div>
+
+<div class="resultado-fila">
+Facturacion Electrica = <b>${factP.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
 <h3>Evaluación económica</h3>
 
-Ahorros = <b>${ahorro.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
-PSRI = <b>${psri.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
+<div class="resultado-fila">
+Ahorros = <b>${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
+<div class="resultado-fila">
+PSRI = <b>${psri.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div>
 `;
 }
 
@@ -4115,23 +5747,42 @@ resD.innerHTML = `
 
 <h3>Recomendación</h3>
 
-Capacidad del capacitor recomendado =
-<b>${capaci.toLocaleString('es-MX',{minimumFractionDigits:2})} [kVar]</b><br>
+<div class="resultado-fila">
+Capaci. del capacitor recomendado =<b>${capaci.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [kVar]</b>
+</div>
 
-Ahorro esperado =
-<b>${ahorroEsp.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Ahorro esperado =<b>${ahorroEsp.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
 <h3>Evaluación Económica</h3>
 
-Factor de potencia esperado =
-<b>${fpEsp.toLocaleString('es-MX',{minimumFractionDigits:2})} [%]</b><br>
+<div class="resultado-fila">
+Factor de potencia esperado =<b>${fpEsp.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [%]</b>
+</div>
 
-Ahorro =
-<b>${ahorro.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<div class="resultado-fila">
+Ahorro =<b>${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
-PSRI =
-<b>${psri.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
-
+<div class="resultado-fila">
+PSRI =<b>${psri.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div>
 `;
 }
 
@@ -4144,11 +5795,21 @@ resE.innerHTML = `
 
 <h3>Evaluación Económica</h3>
 
+<div class="resultado-fila">
 Ahorro =
-<b>${ahorro.toLocaleString('es-MX',{minimumFractionDigits:2})} [$/mes]</b><br>
+<b>${ahorro.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/mes]</b>
+</div>
 
+<div class="resultado-fila">
 PSRI =
-<b>${psri.toLocaleString('es-MX',{minimumFractionDigits:2})} [meses]</b><br>
+<b>${psri.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div>
 
 `;
 }
@@ -4160,40 +5821,115 @@ resultadoTarifaCompleto.innerHTML = `
 
 <h3>Datos Actuales</h3>
 
-Tarifa actual estimada = <b> ${data.tarifaActual.toFixed(2)} [$/kWh]</b><br>
-Costo actual = <b>$ ${data.inputs.costo_total.toLocaleString()}</b><br>
-Clasificación = <b>${data.tipoTarifa}</b><br><br>
+<div class="resultado-fila">
+Tarifa actual estimada = <b> ${data.tarifaActual.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/kWh]</b>
+</div>
+<div class="resultado-fila">
+Costo actual = <b>$ ${data.inputs.costo_total.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
 
+<div class="resultado-fila">
+Clasificación = <b>${data.tipoTarifa}</b>
+</div>
 <h3>Costo estimado para tarifa OM</h3>
 
-Costo OM = <b>$ ${data.costoOM.toLocaleString()}</b><br>
-Ahorro OM = <b>$ ${data.ahorroOM.toLocaleString()}</b><br><br>
+<div class="resultado-fila">
+Costo OM = <b>$ ${data.costoOM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
+
+<div class="resultado-fila">
+Ahorro OM = <b>$ ${data.ahorroOM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
 
 <h3>Costo estimado para tarifa HM</h3>
 
-Costo HM = <b>$ ${data.costoHM.toLocaleString()}</b><br>
-Ahorro HM = <b>$ ${data.ahorroHM.toLocaleString()}</b><br><br>
+<div class="resultado-fila">
+Costo HM = <b>$ ${data.costoHM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
+
+<div class="resultado-fila">
+Ahorro HM = <b>$ ${data.ahorroHM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
 
 <h3>Inversion estimada para cambio de tarifa en instalciones electricas</h3>
 
-Transformador estimado = <b>$ ${data.transformador.toLocaleString()}</b><br>
-Banco de capacitores = <b>$ ${data.capacitores.toLocaleString()}</b><br>
-Instalación eléctrica = <b>$ ${data.instalacion.toLocaleString()}</b><br>
-Inversión estimada = <b>$ ${data.inversion.toLocaleString()}</b><br><br>
+<div class="resultado-fila">
+Transformador estimado = <b>$ ${data.transformador.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
+
+<div class="resultado-fila">
+Banco de capacitores = <b>$ ${data.capacitores.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
+
+<div class="resultado-fila">
+Instalación eléctrica = <b>$ ${data.instalacion.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
+
+<div class="resultado-fila">
+Inversión estimada = <b>$ ${data.inversion.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
 
 <h3>Recuperacion de Inversion</h3>
 
-PSRI OM = <b>${data.psriOM.toFixed(2)} [meses]</b><br>
-PSRI HM = <b>${data.psriHM.toFixed(2)} [meses]</b>
-
+<div class="resultado-fila">
+PSRI OM = <b>${data.psriOM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [meses]</b>
+</div>
+<div class="resultado-fila">
+PSRI HM = <b>${data.psriHM.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}[meses]</b>
+</div>
 <h3>Recomendación de Tarifa</h3>
 
-La tarifa más conveniente es: <b>${data.mejorTarifa}</b><br>
-Ahorro estimado mensual: <b>$ ${data.ahorroMejor.toLocaleString('es-MX',{minimumFractionDigits:2})}</b><br><br>
-
+<div class="resultado-fila">
+La tarifa más conveniente es: <b>${data.mejorTarifa}</b>
+</div>
+<div class="resultado-fila">
+Ahorro estimado mensual: <b>$ ${data.ahorroMejor.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})}</b>
+</div>
 <h3>Justificación</h3>
 
-El costo actual de energía es <b>${data.tarifaActual.toFixed(2)} $/kWh</b>, 
+El costo actual de energía es <b>${data.tarifaActual.toLocaleString('es-MX',{
+  minimumFractionDigits:2,
+  maximumFractionDigits:2
+})} [$/kWh]</b>, 
 lo cual indica que el sistema opera con una tarifa relativamente alta 
 en comparación con tarifas de media tensión como OM o HM.<br><br>
 
@@ -4636,11 +6372,11 @@ async function descargarExcelSeleccionados(){
     // =====================================================
 
     function crearHojaVisual(
-      nombreHoja,
-      tituloPrincipal,
-      pozos,
-      config
-    ){
+  nombreHoja,
+  tituloPrincipal,
+  pozos = [],
+  config
+){
 
       const hoja =
       workbook.addWorksheet(
@@ -4661,6 +6397,15 @@ async function descargarExcelSeleccionados(){
       ];
 
       let fila = 2;
+
+  if(!Array.isArray(pozos)){
+  console.error(
+    "No es arreglo:",
+    nombreHoja,
+    pozos
+  );
+  return;
+}
 
       pozos.forEach(pozo => {
 
@@ -4871,6 +6616,140 @@ async function descargarExcelSeleccionados(){
     for(const doc of snapshot.docs){
 
       const p = doc.data();
+      const hojaProyecto =
+    workbook.addWorksheet(
+    (p.proyecto || "Proyecto")
+    .substring(0,31)
+    );
+
+    hojaProyecto.getCell("A1").value =
+"Proyecto";
+
+hojaProyecto.getCell("B1").value =
+p.proyecto || "";
+
+hojaProyecto.getCell("A2").value =
+"Municipio";
+
+hojaProyecto.getCell("B2").value =
+p.municipio || "";
+
+hojaProyecto.getCell("A3").value =
+"Organismo";
+
+hojaProyecto.getCell("B3").value =
+p.organismo || "";
+
+hojaProyecto.getCell("A4").value =
+"Responsable";
+
+hojaProyecto.getCell("B4").value =
+p.responsable || "";
+
+let fila = 7;
+
+hojaProyecto.getRow(fila).values = [
+
+"No",
+"Nombre",
+"Motor-Bomba",
+"Motor",
+"Bomba",
+"FP",
+"VV",
+"Tarifa",
+"Ahorro",
+"Inversión"
+
+];
+
+fila++;
+
+(p.pozos || []).forEach((pozo,index)=>{
+
+ const ahorro =
+
+   obtenerValor(pozo.calcA,"ahorro") +
+
+   obtenerValor(pozo.calcB,"ahorros") +
+
+   obtenerValor(pozo.calcC,"ahorro_4") +
+
+   obtenerValor(pozo.calcD,"ahorro_5") +
+
+   obtenerValor(pozo.calcE,"ahorro_6");
+
+ const inversion =
+
+   obtenerValor(pozo.calcA,"inversion_mb") +
+
+   obtenerValor(pozo.calcB,"inversion_m") +
+
+   obtenerValor(pozo.calcC,"inversion_4") +
+
+   obtenerValor(pozo.calcD,"costo_banco") +
+
+   obtenerValor(pozo.calcE,"inversion_6");
+
+ hojaProyecto.getRow(fila).values = [
+
+   index + 1,
+
+   pozo.nombre,
+
+   obtenerValor(pozo.calcA,"ahorro"),
+
+   obtenerValor(pozo.calcB,"ahorros"),
+
+   obtenerValor(pozo.calcC,"ahorro_4"),
+
+   obtenerValor(pozo.calcD,"ahorro_5"),
+
+   obtenerValor(pozo.calcE,"ahorro_6"),
+
+   obtenerValor(pozo.calcTarifa,"ahorroMejor"),
+
+   ahorro,
+
+   inversion
+
+ ];
+
+ fila++;
+
+});
+
+fila += 3;
+
+hojaProyecto.getCell(`A${fila}`).value =
+"AHORRO ECONÓMICO";
+
+fila++;
+
+hojaProyecto.getRow(fila).values = [
+
+"Pozo",
+"Motor-Bomba",
+"Motor",
+"Bomba",
+"FP",
+"VV",
+"Tarifa",
+"Total"
+
+];
+
+fila++;
+
+fila += 5;
+
+hojaProyecto.getCell(`A${fila}`).value =
+"AHORRO ENERGÉTICO";
+
+fila++;
+
+
+
 
       // =====================================================
       // 🔥 RESUMEN
@@ -4956,6 +6835,7 @@ try{
         "Bomba",
         "FP",
         "VV",
+        "Instalacion Eléctrica",
         "Tarifa",
         "Ahorro Total",
         "Inversión"
@@ -5102,8 +6982,7 @@ try{
       // =====================================================
 
       crearHojaVisual(
-
-        "Motor-Bomba",
+  `Motor-Bomba-${p.proyecto}`,
         "CÁLCULO MOTOR - BOMBA",
         p.pozos || [],
 
@@ -5141,11 +7020,10 @@ try{
       // 🔥 MOTOR
       // =====================================================
 
-      crearHojaVisual(
-
-        "Motor",
-        "CÁLCULO MOTOR",
-        p.pozos || [],
+     crearHojaVisual(
+  `Motor-${p.proyecto}`,
+  "CÁLCULO MOTOR",
+  p.pozos || [],
 
         {
 
@@ -5179,8 +7057,7 @@ try{
       // =====================================================
 
       crearHojaVisual(
-
-        "Bomba",
+  `Bomba-${p.proyecto}`,
         "CÁLCULO BOMBA",
         p.pozos || [],
 
@@ -5215,8 +7092,7 @@ try{
       // =====================================================
 
       crearHojaVisual(
-
-        "FP",
+  `FP-${p.proyecto}`,
         "FACTOR POTENCIA",
         p.pozos || [],
 
@@ -5250,9 +7126,8 @@ try{
       // 🔥 VV
       // =====================================================
 
-      crearHojaVisual(
-
-        "VV",
+     crearHojaVisual(
+  `VV-${p.proyecto}`,
         "VARIADOR VELOCIDAD",
         p.pozos || [],
 
@@ -5286,9 +7161,8 @@ try{
       // 🔥 TARIFA
       // =====================================================
 
-      crearHojaVisual(
-
-        "Tarifa",
+    crearHojaVisual(
+  `Tarifa-${p.proyecto}`,
         "ANÁLISIS TARIFARIO",
         p.pozos || [],
 
